@@ -1,2 +1,0 @@
-INDEX VERSION 1.122+/home/administrador/Desktop/trabalho_wender/Exercicio_Locadora/Exercicio_Locadora/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
-4215996787.index

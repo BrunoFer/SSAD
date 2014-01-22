@@ -1,3 +1,0 @@
-eclipse.preferences.version=1
-module-start-timeout=300000
-runtimes=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<runtimes>\n  <runtime id\="JBoss v4.2" location\="/home/administrador/Desktop/trabalho_wender/jboss-4.2.3.GA/bin" name\="JBoss v4.2" runtime-type-id\="org.eclipse.jst.server.generic.runtime.jboss42" server_definition_id\="org.eclipse.jst.server.generic.runtime.jboss42" timestamp\="0">\n    <map key\="generic_server_instance_properties" serverRootDirectory\="/home/administrador/Desktop/trabalho_wender/jboss-4.2.3.GA"/>\n  </runtime>\n</runtimes>\n
