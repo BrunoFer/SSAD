@@ -158,6 +158,8 @@ public class ClienteFuncoes {
 		int idDiretor = id();
 		if (!g.associa(idDiretor, idFilme))
 			System.out.println("Não foi possível associar o filme ao diretor!");
+		else
+			System.out.println("Associação realizada!");
 	}
 
 	public void filmesDiretor(Gerenciador g) throws IOException {
@@ -235,7 +237,11 @@ public class ClienteFuncoes {
 		String retorno = retornoCliente.readLine();
 		exemplar.setDataAquisicao(retorno);
 		exemplar.setEmprestado(false);
-		g.addExemplar(exemplar, idf);
+		exemplar = g.addExemplar(exemplar, idf);
+		if (exemplar != null)
+			System.out.println("EXEMPLAR cadastrado!");
+		else
+			System.out.println("Erro. EXEMPLAR NÃO cadastrado!");
 	}
 
 	public void filmeID(Gerenciador g) throws IOException {
@@ -393,19 +399,25 @@ public class ClienteFuncoes {
 		do {
 			System.out.println("Id do filme:");
 			int idFilme = id();
-			System.out.println("Valor do empréstimo:");
-			float valorEmprestimo = Float.parseFloat(retornoCliente.readLine());
-			item = g.addItem(idFilme, valorEmprestimo);
-			if (item == null) {
-				System.out
-						.println("Filme não possui exemplares ou estão todos emprestados!");
+			filme = g.buscaFilme(idFilme);
+			float valorEmprestimo = 0;
+			if (filme != null) {
+				System.out.println("Valor do empréstimo:");
+				valorEmprestimo = Float.parseFloat(retornoCliente.readLine());
+				item = g.addItem(idFilme, valorEmprestimo);
+				if (item == null) {
+					System.out
+							.println("Filme não possui exemplares ou estão todos emprestados!");
+				} else {
+					itens.add(item);
+				}
 			} else {
-				itens.add(item);
+				System.out.println("Filme Inexistente!");
 			}
 			System.out.println("Escolher mais filmes? S/N");
 			sair = retornoCliente.readLine();
 			valorTotal += valorEmprestimo;
-		} while (sair.equals("n") || sair.equals("N"));
+		} while (sair.equals("s") || sair.equals("S"));
 		emprestimo.setValorTotal(valorTotal);
 
 		System.out.println("Id do cliente:");
@@ -430,6 +442,7 @@ public class ClienteFuncoes {
 		emprestimo = g.buscaEmprestimo(id());
 		if (emprestimo != null) {
 			g.devolucaoFilmes(emprestimo, dataAtual());
+			System.out.println("DEVOLUÇÃO de FILMES confirmada! Os dados foram atualizados.");
 		} else {
 			System.out
 					.println("Registro de EMPRÉSTIMO inexistente com esse ID!");

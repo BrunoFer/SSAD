@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.ejb.EJBException;
 import javax.ejb.Remote;
-import javax.ejb.Stateless;
+import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -19,7 +19,7 @@ import br.edu.ifsudestemg.locadora.entity.Filme;
 import br.edu.ifsudestemg.locadora.entity.ItemEmprestimo;
 
 @Remote(Gerenciador.class)
-@Stateless
+@Stateful
 public class GerenciadorVideoLocadora implements Gerenciador {
 	@PersistenceContext
 	EntityManager em;
@@ -36,14 +36,17 @@ public class GerenciadorVideoLocadora implements Gerenciador {
 
 	@Override
 	public Exemplar addExemplar(Exemplar exemplar, int idFilme) {
-
 		Filme filme = em.find(Filme.class, idFilme);
-		List<Exemplar> exemplares = filme.getExemplares();
-		exemplar.setFilme(filme);
-		em.persist(exemplar);
-		exemplares.add(exemplar);
-		em.merge(filme);
-		em.flush();
+		if (filme != null) {
+			List<Exemplar> exemplares = filme.getExemplares();
+			exemplar.setFilme(filme);
+			em.persist(exemplar);
+			exemplares.add(exemplar);
+			em.merge(filme);
+			em.flush();
+		} else {
+			exemplar = null;
+		}
 		return exemplar;
 	}
 
@@ -219,8 +222,8 @@ public class GerenciadorVideoLocadora implements Gerenciador {
 		}
 		if (exemplar == null)
 			return null;
-
 		itemEmprestimo.setValorEmprestimo(valorEmprestimo);
+
 		return itemEmprestimo;
 	}
 
@@ -232,13 +235,13 @@ public class GerenciadorVideoLocadora implements Gerenciador {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void devolucaoFilmes(Emprestimo emprestimo,String dataAtual) {
+	public void devolucaoFilmes(Emprestimo emprestimo, String dataAtual) {
 		List<ItemEmprestimo> itens;
 		Query q = em
 				.createQuery("select i from Emprestimo as e inner join e.itens as i where e.id = :idEmprestimo");
 		q.setParameter("idEmprestimo", emprestimo.getId());
 		itens = (List<ItemEmprestimo>) q.getResultList();
-		for (ItemEmprestimo ie: itens) {
+		for (ItemEmprestimo ie : itens) {
 			ItemEmprestimo itemEmprestimo = buscaItem(ie.getId());
 			itemEmprestimo.setDataDevolucao(dataAtual);
 			Exemplar exemplar = itemEmprestimo.getExemplar();
